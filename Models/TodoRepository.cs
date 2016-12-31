@@ -9,7 +9,7 @@ namespace Monitoring.Models {
         
         public TodoRepository() {
             Add(new TodoItem{Name="Item1"});
-        }
+        }//In order to populate the dictionnary at the startupof this web service, we add Item1
         
         public void Add(TodoItem item) {
             item.Key = Guid.NewGuid().ToString();

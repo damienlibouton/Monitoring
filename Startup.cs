@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Monitoring.Models;
 
 namespace Monitoring
 {
@@ -29,6 +30,8 @@ namespace Monitoring
         {
             // Add framework services.
             services.AddMvc();
+            // Add DI as a singleton of TodoRepository (Item1 will exist by the builder) 
+            services.AddSingleton<ITodoRepository, TodoRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
