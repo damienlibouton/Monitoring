@@ -3,39 +3,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Monitoring.Models;
 
 namespace Monitoring.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class TodoController : Controller
     {
-        // GET api/values
+        public ITodoRepository TodoRepo {get;set;}
+        public TodoController(ITodoRepository todoRepo) {
+            TodoRepo = todoRepo;
+        }
+        // GET api/todo
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<TodoItem> GetAll()
         {
-            return new string[] { "value1", "value2" };
+            return TodoRepo.GetAll();
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET api/todo/5
+        [HttpGet("{id}", Name = "GetTodo")]
+        public IActionResult GetById(string id)
         {
-            return "value";
+            var item = TodoRepo.Find(id);
+            if (item != null) {
+                return NotFound();
+            }
+            return new ObjectResult(item);
         }
 
-        // POST api/values
+        // POST api/todo
         [HttpPost]
         public void Post([FromBody]string value)
         {
         }
 
-        // PUT api/values/5
+        // PUT api/todo/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
-        // DELETE api/values/5
+        // DELETE api/todo/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
