@@ -50,7 +50,7 @@ namespace Monitoring.Controllers
             if (todo == null) {
                 return NotFound();
             }
-            TodoRepo.Update(todo);
+            TodoRepo.Update(item);
             return new NoContentResult();
         }
 
