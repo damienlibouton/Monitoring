@@ -16,17 +16,15 @@ namespace Monitoring.Controllers
         }
         // GET api/todo
         [HttpGet]
-        public IEnumerable<TodoItem> GetAll()
-        {
+        public IEnumerable<TodoItem> GetAll() {
             return TodoRepo.GetAll();
         }
 
         // GET api/todo/5
         [HttpGet("{id}", Name = "GetTodo")]
-        public IActionResult GetById(string id)
-        {
+        public IActionResult GetById(string id) {
             var item = TodoRepo.Find(id);
-            if (item != null) {
+            if (item == null) {
                 return NotFound();
             }
             return new ObjectResult(item);
@@ -34,20 +32,37 @@ namespace Monitoring.Controllers
 
         // POST api/todo
         [HttpPost]
-        public void Post([FromBody]string value)
-        {
+        public IActionResult Create([FromBody]TodoItem item) {
+            if (item == null) {
+                return BadRequest();
+            }
+            TodoRepo.Add(item);
+            return CreatedAtRoute("GetTodo", new {id = item.Key}, item);
         }
 
         // PUT api/todo/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
+        public IActionResult Update(string id, [FromBody]TodoItem item) {
+            if (item == null || id != item.Key) {
+                return BadRequest();
+            }
+            var todo = TodoRepo.Find(id);
+            if (todo == null) {
+                return NotFound();
+            }
+            TodoRepo.Update(todo);
+            return new NoContentResult();
         }
 
         // DELETE api/todo/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+        public IActionResult Delete(string id) {
+            var todo = TodoRepo.Find(id);
+            if (todo == null) {
+                return NotFound();
+            }
+            TodoRepo.Remove(id);
+            return new NoContentResult();
         }
     }
 }
